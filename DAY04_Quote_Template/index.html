@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Random Quote Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+
+    #quote {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      min-height: 100px;
+    }
+
+    #new-quote-btn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    #new-quote-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Random Quote Generator</h1>
+  <p id="quote">Loading quote...</p>
+  <button id="new-quote-btn">Get New Quote</button>
+
+  <script>
+    const quoteEl = document.getElementById('quote');
+    const button = document.getElementById('new-quote-btn');
+
+    async function fetchQuote() {
+      try {
+        const res = await fetch('https://dummyjson.com/quotes/random');
+        const data = await res.json();
+        quoteEl.textContent = `"${data.quote}" — ${data.author}`;
+      } catch (error) {
+        quoteEl.textContent = 'Failed to load quote. Please try again.';
+      }
+    }
+
+    // Initial quote on page load
+    fetchQuote();
+
+    // Fetch new quote on button click
+    button.addEventListener('click', fetchQuote);
+  </script>
+</body>
+</html>
