@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Generator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #141e30, #243b55);
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: #1f2c40;
+        padding: 30px;
+        border-radius: 16px;
+        max-width: 400px;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.6rem;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.95rem;
+      }
+
+      input[type="range"] {
+        width: 100%;
+      }
+
+      input[type="checkbox"] {
+        transform: scale(1.2);
+      }
+
+      .password-display {
+        background: #0f172a;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+        word-wrap: break-word;
+        min-height: 60px;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: #00bcd4;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 4px;
+      }
+
+      .copy-btn::after {
+        content: 'Copy';
+        position: absolute;
+        top: -28px;
+        right: 0;
+        background-color: #00bcd4;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .copy-btn:hover::after {
+        opacity: 1;
+      }
+
+      button.generate-btn {
+        background: #00bcd4;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button.generate-btn:hover {
+        background: #0198a6;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px;
+        }
+
+        .container h2 {
+          font-size: 1.3rem;
+        }
+
+        .password-display {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Password Generator</h2>
+
+      <div class="input-group">
+        <label>
+          Length:
+          <span id="length-value">12</span>
+        </label>
+        <input type="range" id="length" min="4" max="24" value="12" />
+      </div>
+
+      <div class="input-group">
+        <label>
+          <span>Include Uppercase</span>
+          <input type="checkbox" id="uppercase" checked />
+        </label>
+        <label>
+          <span>Include Numbers</span>
+          <input type="checkbox" id="numbers" checked />
+        </label>
+        <label>
+          <span>Include Symbols</span>
+          <input type="checkbox" id="symbols" checked />
+        </label>
+      </div>
+
+      <div class="password-display" id="password-display">
+        click "Generate"
+        <button class="copy-btn" onclick="copyPassword()" aria-label="Copy password">
+          📋
+        </button>
+      </div>
+
+      <button class="generate-btn" onclick="generatePassword()">Generate Password</button>
+    </div>
+
+    <script>
+      const lengthEl = document.getElementById('length');
+      const lengthValue = document.getElementById('length-value');
+      const uppercaseEl = document.getElementById('uppercase');
+      const numbersEl = document.getElementById('numbers');
+      const symbolsEl = document.getElementById('symbols');
+      const passwordDisplay = document.getElementById('password-display');
+
+      const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+      const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const numbers = '0123456789';
+      const symbols = '!@#$%^&*()_+=[]{}|?><';
+
+      lengthEl.addEventListener('input', () => {
+        lengthValue.textContent = lengthEl.value;
+      });
+
+      function generatePassword() {
+        let chars = lowercase;
+        if (uppercaseEl.checked) chars += uppercase;
+        if (numbersEl.checked) chars += numbers;
+        if (symbolsEl.checked) chars += symbols;
+
+        let password = '';
+        const length = parseInt(lengthEl.value);
+        for (let i = 0; i < length; i++) {
+          const index = Math.floor(Math.random() * chars.length);
+          password += chars[index];
+        }
+
+        passwordDisplay.innerHTML = `
+          ${password}
+          <button class="copy-btn" onclick="copyPassword()" aria-label="Copy password">
+            📋
+          </button>`;
+      }
+
+      function copyPassword() {
+        const text = passwordDisplay.textContent.replace('📋', '').trim();
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Password copied to clipboard!');
+        });
+      }
+    </script>
+  </body>
+</html>
